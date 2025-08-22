@@ -1,62 +1,32 @@
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid, Paper } from '@mui/material';
-import AnnouncementIcon from '@mui/icons-material/Announcement';
-import NewReleasesIcon from '@mui/icons-material/NewReleases';
-import ArticleIcon from '@mui/icons-material/Article';
-
-const newsItems = [
-  {
-    icon: <AnnouncementIcon fontSize="large" color="primary" />,
-    title: 'Главные новости',
-    description: 'Самые важные события и обновления из мира бизнеса.',
-  },
-  {
-    icon: <NewReleasesIcon fontSize="large" color="primary" />,
-    title: 'Свежие релизы',
-    description: 'Новейшие продукты и сервисы на рынке, которые стоит знать.',
-  },
-  {
-    icon: <ArticleIcon fontSize="large" color="primary" />,
-    title: 'Экспертные статьи',
-    description: 'Аналитика и советы от ведущих специалистов отрасли.',
-  },
-];
 
 const News = () => {
+  const [newsList, setNewsList] = useState([]);
+
+  useEffect(() => {
+    const savedNews = JSON.parse(localStorage.getItem('newsList')) || [];
+    setNewsList(savedNews);
+  }, []);
+
   return (
-    <Box
-      id="news"
-      sx={{
-        py: 10,
-        backgroundColor: '#f5f5f5',
-        textAlign: 'center',
-      }}
-    >
-      <Typography variant="h4" fontWeight="bold" mb={4} data-aos="fade-up">
+    <Box sx={{ py: 10, backgroundColor: '#f5f5f5', textAlign: 'center' }}>
+      <Typography variant="h4" fontWeight="bold" mb={4}>
         Новости
       </Typography>
-
       <Grid container spacing={4} justifyContent="center">
-        {newsItems.map((news, index) => (
+        {newsList.length === 0 && <Typography>Новостей пока нет</Typography>}
+        {newsList.map((news, index) => (
           <Grid item xs={12} md={4} key={index}>
-            <Paper
-              elevation={3}
-              data-aos="fade-up"
-              data-aos-delay={index * 100}
-              sx={{
-                p: 4,
-                height: '100%',
-                transition: 'transform 0.3s',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                },
-              }}
-            >
-              <Box mb={2}>{news.icon}</Box>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                {news.title}
+            <Paper elevation={3} sx={{ p: 4, minHeight: 220 }}>
+              <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 1 }}>
+                Дата: {news.date}
               </Typography>
-              <Typography variant="body1" color="text.secondary">
-                {news.description}
+              <Typography variant="h6" fontWeight="bold" gutterBottom>
+                {news.title.ru}
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                {news.description.ru}
               </Typography>
             </Paper>
           </Grid>

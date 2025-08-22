@@ -1,139 +1,145 @@
-import React, { useEffect, useRef } from "react";
-import { Box, Typography } from "@mui/material";
+import React from "react";
+import { Box, Typography, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 
-const Cube = ({ size = 220, rotationSpeed = 15, faces }) => {
-  const ref = useRef(null);
-
-  useEffect(() => {
-    let frameId;
-    let angle = 0;
-
-    const animate = () => {
-      angle = (angle + rotationSpeed * 0.016) % 360;
-      if (ref.current) {
-        ref.current.style.transform = `rotateX(${Math.sin(angle * 0.5) * 10}deg) rotateY(${angle}deg)`;
-      }
-      frameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => cancelAnimationFrame(frameId);
-  }, [rotationSpeed]);
-
-  const half = size / 2;
-
-  const faceTransforms = {
-    front: `translateZ(${half}px)`,
-    back: `rotateY(180deg) translateZ(${half}px)`,
-    left: `rotateY(-90deg) translateZ(${half}px)`,
-    right: `rotateY(90deg) translateZ(${half}px)`,
-    top: `rotateX(90deg) translateZ(${half}px)`,
-    bottom: `rotateX(-90deg) translateZ(${half}px)`,
-  };
-
-  return (
+const BookCard = ({ src, title, linkTo }) => (
+  <Box
+    component={Link}
+    to={linkTo}
+    sx={{
+      textDecoration: "none",
+      color: "white",
+      perspective: 900, // 3D пространство
+      display: "inline-block",
+    }}
+  >
     <Box
-      ref={ref}
       sx={{
-        width: size,
-        height: size,
+        width: 250,
+        height: 350,
         position: "relative",
         transformStyle: "preserve-3d",
-        transformOrigin: "center center",
-        userSelect: "none",
-        cursor: "default",
-        margin: 2,
+        transition: "transform 0.5s ease",
+        transform: "rotateY(20deg)",
+        cursor: "pointer",
+        boxShadow: "5px 8px 15px rgba(0,0,0,0.3)",
+        borderRadius: 2,
+        "&:hover": {
+          transform: "rotateY(-15deg) scale(1.1)",
+          zIndex: 10,
+          boxShadow: "10px 15px 30px rgba(0,0,0,0.5)",
+        },
       }}
     >
-      {Object.entries(faceTransforms).map(([face, transform]) => (
-        <Box
-          key={face}
-          sx={{
-            position: "absolute",
-            width: size,
-            height: size,
-            borderRadius: 3,
-            backgroundImage: `url(${faces[face]})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            boxShadow: "0 0 12px rgba(0,0,0,0.5)",
-            border: "2px solid #fff",
-            backfaceVisibility: "hidden",
-            transform,
-            filter: "brightness(0.9)",
-          }}
-        />
-      ))}
+      {/* Передняя обложка книги */}
+      <Box
+        component="img"
+        src={src}
+        alt={title}
+        sx={{
+          width: "100%",
+          height: "100%",
+          borderRadius: 2,
+          objectFit: "cover",
+          backfaceVisibility: "hidden",
+          position: "relative",
+          zIndex: 5,
+        }}
+      />
+
+      {/* Корешок книги */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: 30,
+          height: "100%",
+          backgroundColor: "#444",
+          borderTopLeftRadius: 6,
+          borderBottomLeftRadius: 6,
+          boxShadow: "inset -3px 0 8px rgba(0,0,0,0.7)",
+          transformOrigin: "left center",
+          transform: "rotateY(-70deg) translateX(-30px)",
+          zIndex: 1,
+        }}
+      />
     </Box>
-  );
-};
+
+    <Typography
+      variant="subtitle1"
+      textAlign="center"
+      mt={2}
+      sx={{ width: 250, fontWeight: 700 }}
+    >
+      {title}
+    </Typography>
+
+    <Box textAlign="center" mt={1}>
+      <Button variant="contained" size="small" sx={{ textTransform: "none" }}>
+        Подробнее
+      </Button>
+    </Box>
+  </Box>
+);
 
 const CubesShowcase = () => {
-  const faces1 = {
-    front: "/assets/journal1.png",
-    back: "/assets/journal1.png",
-    left: "/assets/journal1.png",
-    right: "/assets/journal1.png",
-    top: "/assets/journal1.png",
-    bottom: "/assets/journal1.png",
-  };
-
-  const faces2 = {
-    front: "/assets/ivk.jpg",
-    back: "/assets/ivk.jpg",
-    left: "/assets/ivk.jpg",
-    right: "/assets/ivk.jpg",
-    top: "/assets/ivk.jpg",
-    bottom: "/assets/ivk.jpg",
-  };
+  const journals = [
+    {
+      src: "/assets/journal1.png",
+      title: "Наука, новые технологии и инновации Кыргызстана",
+      linkTo: "/journal1",
+    },
+    {
+      src: "/assets/ivk.jpg",
+      title: 'Журнал "Известия ВУЗов Кыргызстана"',
+      linkTo: "/journal2",
+    },
+  ];
 
   return (
     <Box
       sx={{
-    minHeight: "100vh",
-    paddingTop: 10,       // <-- добавлено, чтобы опустить содержимое вниз
-    backgroundImage: 'url("/assets/hero-bg.jpg")',
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: 8,
-    paddingX: 4,
-    position: "relative",
-    color: "white",
-    textShadow: "0 0 6px rgba(0,0,0,0.7)",
-  }}
+        minHeight: "100vh",
+        pt: 6,
+        px: 4,
+        backgroundImage: 'url("/assets/hbg.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        color: "#fff",
+        textShadow: "0 0 6px rgba(0,0,0,0.7)",
+        position: "relative",
+      }}
     >
-      <Typography
-        variant="h3"
-        fontWeight="bold"
-        sx={{ zIndex: 2, marginBottom: 6 }}
-      >
-       Журналы
+      <Typography variant="h3" fontWeight="bold" mb={-5} zIndex={2}>
+        Журналы
       </Typography>
 
       <Box
         sx={{
           display: "flex",
-          gap: 50,  // увеличенный отступ между кубами
-          zIndex: 2,
-          perspective: 1400,
-          justifyContent: "center",
+          flexWrap: "wrap",
+          justifyContent: "space-around", // вот тут space-around для карточек
+          gap: 4,
           width: "100%",
+          maxWidth: 1200,
+          zIndex: 2,
         }}
       >
-        <Cube size={220} rotationSpeed={15} faces={faces1} />
-        <Cube size={220} rotationSpeed={10} faces={faces2} />
+        {journals.map((j) => (
+          <BookCard key={j.title} {...j} />
+        ))}
       </Box>
 
+      {/* Тёмный фильтр для фона */}
       <Box
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.4)",
+          backgroundColor: "rgba(0,0,0,0.4)",
           zIndex: 1,
         }}
       />

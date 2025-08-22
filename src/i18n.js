@@ -6,7 +6,8 @@ const resources = {
   en: {
     translation: {
       home: 'Home',
-      services: 'Services',
+      authors: 'Authors',
+      editorialboard: 'EditorialBoard',
       Books: 'Books',
       publishing: 'Publishing',
       contact: 'Contact',
@@ -19,7 +20,8 @@ const resources = {
   ru: {
     translation: {
       home: 'Главная',
-      services: 'Услуги',
+      authors: 'Авторам',
+      editorialboard: 'Редколлегия',
       books: 'Книги',
       publishing: 'Издательство',
       contact: 'Контакты',
@@ -32,7 +34,8 @@ const resources = {
   kg: {
     translation: {
       home: 'Башкы бет',
-      services: 'Кызматтар',
+      authors: 'Авторлорго',
+      editorialboard: 'Акылдаштар',
       Books: 'Китептер',
       cases: 'Басма үйү',
       contact: 'Байланыш',
